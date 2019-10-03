@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans  
+ http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+ http://www.springframework.org/schema/context  
+ http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+        <context:component-scan base-package="control" />
+<bean
+                class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                <property name="prefix" value="/WEB-INF/pages/" />
+                <property name="suffix" value=".jsp" />
+        </bean>
+        
+         <bean id="dataSource"
+                class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+                <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://localhost/rental"/>
+                <property name="username" value="root"/>
+                <property name="password" value="" />
+        </bean> 
+        
+            <bean id="sessionFactory"
+                class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+                <property name="dataSource" ref="dataSource" />
+                <property name="mappingResources">
+                        <list>
+                                <value>control/Register.hbm.xml</value>
+                                <value>control/Encrypt.hbm.xml</value>
+                               
+                        </list>
+                </property>
+
+                <property name="hibernateProperties">
+                        <value>hibernate.dialect=org.hibernate.dialect.MySQLDialect
+                                hibernate.hbm2ddl.auto=update
+            </value>
+                </property>
+        </bean>
+        <bean id="hibernateTemplate"
+   class="org.springframework.orm.hibernate3.HibernateTemplate">
+                <property name="sessionFactory" >
+                <ref bean="sessionFactory"/>
+                </property>
+        </bean>
+        
+        <bean id="pojo1" class="control.daoimpl">
+        <property name="hb" ref="hibernateTemplate"/>
+        
+        </bean>
+        <bean id="pojo2" class="control.serviceimpl">
+        <property name="sd" ref="pojo1"/>
+        
+        </bean> 
+        
+         <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="524288000" />
+    </bean>
+        
+      
+        
+ </beans>
